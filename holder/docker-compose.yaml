@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  aries-cloudagent-holder:
+    image: stelladim/aries-cloudagent-amd64
+    environment:
+      HOLDER_ADMIN_PORT: ${HOLDER_ADMIN_PORT}
+      HOLDER_PORT: ${HOLDER_PORT}
+      HOLDER_IP: ${HOLDER_IP}
+      LABEL: ${LABEL}
+      LEDGER_IP: ${LEDGER_IP}
+      LEDGER_PORT: ${LEDGER_PORT}
+      WALLET_NAME: ${WALLET_NAME}
+      WALLET_KEY: ${WALLET_KEY}
+    container_name: aries-cloudagent-holder
+    command:
+      - start
+      - --admin
+      - '0.0.0.0'
+      - '${HOLDER_ADMIN_PORT}'
+      - --inbound-transport
+      - http
+      - '0.0.0.0'
+      - '${HOLDER_PORT}'
+      - --endpoint
+      - 'http://${HOLDER_IP}:${HOLDER_PORT}'
+      - --outbound-transport
+      - http
+      - --label
+      - '${LABEL}'
+      - --admin-insecure-mode
+      - --public-invites
+      - --auto-ping-connection
+      - --auto-accept-invites
+      - --auto-accept-requests
+      - --auto-respond-credential-offer
+      - --auto-respond-credential-request
+      - --auto-store-credential
+      - --auto-respond-presentation-request
+      - --genesis-url
+      - 'http://${LEDGER_IP}:${LEDGER_PORT}/genesis'
+      - --preserve-exchange-records
+      - --auto-provision
+      - --emit-new-didcomm-prefix
+      - --wallet-type
+      - 'askar'
+      - --wallet-name
+      - '${WALLET_NAME}'
+      - --wallet-key
+      - '${WALLET_KEY}'
+    ports:
+      - "${HOLDER_PORT}:${HOLDER_PORT}"
+      - "${HOLDER_ADMIN_PORT}:${HOLDER_ADMIN_PORT}"
+    stdin_open: true  # equivalent to -it
+    tty: true         # optional for interactivity
+    restart: always   # ensures the service is always running
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://${HOLDER_IP}:${HOLDER_ADMIN_PORT}/status/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    
+  holder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: holder-image
+    environment:
+      HOLDER_ADMIN_PORT: ${HOLDER_ADMIN_PORT}
+      HOLDER_IP: ${HOLDER_IP}
+      LABEL: ${LABEL}
+      LEDGER_IP: ${LEDGER_IP}
+      LEDGER_PORT: ${LEDGER_PORT}
+      TYPE: ${TYPE}
+      ISSUER_IP: ${ISSUER_IP}
+      ISSUER_PORT: ${ISSUER_PORT}
+      VERIFIER_IP: ${VERIFIER_IP}
+      VERIFIER_PORT: ${VERIFIER_PORT}
+    container_name: holder
+    restart: on-failure
+    depends_on:
+      aries-cloudagent-holder:
+        condition: service_healthy  # Wait for aries-cloudagent-holder to be healthy.
+    stdin_open: true  # equivalent to -it
+    tty: true         # optional for interactivity
+

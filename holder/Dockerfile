@@ -1,0 +1,15 @@
+FROM python:3.8
+
+WORKDIR /holder
+
+RUN pip install --upgrade pip
+
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+COPY ./requirements.txt /holder/requirements.txt
+
+RUN pip install --no-cache-dir -r /holder/requirements.txt
+
+COPY ./app /holder/app
+
+CMD bash -c "python app/setup.py && python app/main.py"
