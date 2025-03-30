@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   aries-cloudagent-holder:
-    image: stelladim/aries-cloudagent-amd64
+    image: stelladim/aries-cloudagent-${ARCHITECTURE}
     environment:
       HOLDER_ADMIN_PORT: ${HOLDER_ADMIN_PORT}
       HOLDER_PORT: ${HOLDER_PORT}
@@ -63,7 +63,7 @@ services:
   holder:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.${ARCHITECTURE}
     image: holder-image
     environment:
       HOLDER_ADMIN_PORT: ${HOLDER_ADMIN_PORT}
