@@ -6,7 +6,7 @@ In addition to the Holder, Issuer, and Verifier services, you will also need to 
 
 ## Installation of Indy Hyperledger and Revocation Registry
 
-1. Ensure that Docker and Docker Compose are installed on your VM. If they are not installed, you can run the *prerequisites.sh* script provided in the repository to install these dependencies.
+1. Ensure that Docker and Docker Compose are installed on your VM. If they are not installed, you can run the *prerequisites.sh* script provided in the repository to install these dependencies. Alternatively, you can install Docker and Docker Compose manually (recommended).
 2. Move to your home directory and clone the source code of [Indy Hyperledger](https://github.com/bcgov/von-network) from the official GitHub repository.
    
    ```
@@ -55,7 +55,7 @@ In addition to the Holder, Issuer, and Verifier services, you will also need to 
 1. Ensure that Docker and Docker Compose are installed on your VM. If they are not installed, you can run the *prerequisites.sh* script provided in the repository to install these dependencies.
 2. Clone or download the source code of the service from the GitHub repository.
 3. Navigate to the */identity-management-component/[entity]* directory. Replace *[entity]* with holder, issuer, or verifier, depending on the entity you wish to set up.
-4. Edit the *.env* file, which contains all the required environment variables. This file allows you to configure the service, including IP addresses and other parameters. You can use a text editor to modify these variables as per your environment setup. It is mandatory to update the IP addresses; otherwise the service will not function.
+4. Edit the *.env* file, which contains all the required environment variables. This file allows you to configure the service, including IP addresses and other parameters. You can use a text editor to modify these variables as per your environment setup. It is mandatory to update the IP addresses; otherwise the service will not function. For the holder entity, you should also specify the desired architecture (either amd64 or arm64).
 5. Start the holder, issuer, or verifier service, depending on the directory you are in.
 6. Once the service is up and running, the respective entity will be initialized and ready for use. Run *main.py* script, which is responsible for establishing connections among other entities and performing operations related to Self-Sovereign Identity, such as credential issuance and verification.
 
